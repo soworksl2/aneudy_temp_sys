@@ -1,0 +1,16 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p, b, strong, i, a{
+    font-size: unset;
+    font-weight: unset;
+    text-decoration: none;
+    color: unset;
+}
+
+html{
+    --color-background: lightgray;
+}
