@@ -2,13 +2,15 @@ let login_token_input = document.getElementById('login-token');
 let login_btn = document.getElementById('login-btn');
 
 
-function login_btn_click(){
+async function login_btn_click(){
     login_btn.disabled = true;
     login_token_input.disabled = true;
 
-    let token_validity = check_token_validity();
+    let token = get_token_input();
+    let token_validity = await check_token_validity(token);
 
     if (token_validity.validity){
+        set_cookie_and_redirect(token);
     }else{
         alert(token_validity.msg);
     }
@@ -55,12 +57,20 @@ function is_valid_token(token){
     return true;
 }
 
-function check_token_validity(){
-    let token = get_token_input();
-
+async function check_token_validity(token){
     if (!is_valid_token(token)) {
         return TokenValidityResponse.fail('el token no es valido');
     }
 
+    let exists_token_response = await fetch(`/api/valid_token/${token}`);
+    if (exists_token_response.status === 404){
+        return TokenValidityResponse.fail('el token no existe');
+    }
+
     return TokenValidityResponse.success();
+}
+
+function set_cookie_and_redirect(token){
+    document.cookie = `token=${token}`;
+    window.location.href = '/';
 }
